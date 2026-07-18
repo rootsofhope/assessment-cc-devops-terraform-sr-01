@@ -3,7 +3,8 @@ name: CI Pipeline
 on: 
   pull_request:
     branches:
-      - main 
+      - devel
+      - stage
 
 jobs:
   build:
@@ -31,11 +32,6 @@ jobs:
 
       - name: Build project
         run: npm run build
-
-      - name: List Dir
-        run: |
-          ls -al
-          ls -al build/
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6.1.0
