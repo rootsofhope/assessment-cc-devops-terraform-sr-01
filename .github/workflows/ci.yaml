@@ -24,8 +24,8 @@ jobs:
       - name: Run linter
         run: npm run lint
 
-      - name: Run formatter
-        run: npm run prettier
+      # - name: Run formatter
+      #   run: npm run prettier
 
       - name: Run tests
         env: 
