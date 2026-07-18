@@ -1,0 +1,50 @@
+name: CD Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_env:
+        description: 'Environment to deploy (eg. devel, stage)'
+        type: string
+        required: true
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Terraform init
+        run: terraform init
+        working-directory: ./terraform
+
+      - name: Terraform workspce select
+        run: terraform workspace select ${{ inputs.deploy_env }}
+        working-directory: ./terraform
+
+      - name: Terraform plan
+        run: terraform plan
+        working-directory: ./terraform
+
+      - name: Terraform apply
+        run: terraform apply -auto-approve
+        working-directory: ./terraform
+
+
+      # - name: Upload Artifacts
+      #   run: |
+      #     cd build
+      #     aws s3 cp . s3://
