@@ -44,7 +44,6 @@ jobs:
         working-directory: ./terraform
 
 
-      # - name: Upload Artifacts
-      #   run: |
-      #     cd build
-      #     aws s3 cp . s3://
+      - name: Deploy Artifacts
+        run: |
+          aws s3 sync s3://roh-terraform/${{ github.ref_name }}/ s3://${{ inputs.deploy_env }}-app-sre-assesmet-bucket/ --delete
